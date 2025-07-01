@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import axios from 'axios';
+import  signup  from '../../actions/user/user' // Importing the signup action
 
 function Signup() {
    const [username, setUsername] = React.useState('');
@@ -34,12 +35,10 @@ function Signup() {
 
                     {/* Submit button to send the sign-in request */}
                     <button
-                        onClick={() => {
+                        onClick={ async() => {
                             // Sending a POST request to the backend API for sign-in
-                            axios.post("http://localhost:3000/api/v1/signup", {
-                                username: username,
-                                password: password
-                            });
+                            const response = await signup(username, password);
+                            console.log(response); // Logging the response data
                         }}
                         className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     >

@@ -3,11 +3,28 @@
 
 import axios from "axios"; // Importing axios for making HTTP requests
 import React from "react"; // Importing React for building the component
+import { useRouter } from "next/navigation";
+
+// const getUserDetails = async (username: string, password: string) => {
+//     const client = new PrismaClient(); // Creating a new Prisma client instance
+//     // Fetching user details from the database based on username and password
+//     const  user = await client.user.findUnique({
+//         where: {
+//             username,
+//             password
+//         }
+//     })
+//     return user; // Returning the user details
+
+// } 
+
+// can't use PrismaClient in the browser, so we will use axios to call the API route
 
 // Defining the Signin component
 export default function Signin() {
     const [username, setUsername] = React.useState(''); // State for username input
     const [password, setPassword] = React.useState(''); // State for password input
+    const router = useRouter(); // Using Next.js router for navigation
     return (
         // Outer container to center the sign-in form on the screen
         <div className="w-screen h-screen flex justify-center items-center bg-gray-100 text-gray-800">
@@ -38,11 +55,18 @@ export default function Signin() {
                     <button
                         onClick={() => {
                             // Sending a POST request to the backend API for sign-in
-                            axios.post("http://localhost:3000/api/v1/signup", {
+                            axios.post("http://localhost:3000/api/v1/signin", {
                                 username,
                                 password
                             }).then(response => {
                                 console.log(response.data); // Logging the response data
+                                if (response.status === 200) {
+                                    // If sign-in is successful, redirect to the home page
+                                    router.push("/");
+                                } else {
+                                    // If sign-in fails, log the error message
+                                    console.error("Sign-in failed:", response.data.message);
+                                }
                             }).catch(error => {
                                 console.error(error); // Logging any errors that occur
                             });
